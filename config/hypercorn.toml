@@ -1,0 +1,14 @@
+# see https://hypercorn.readthedocs.io/en/latest/how_to_guides/logging.html#how-to-log
+access_log_format = '%(h)s %(l)s %(l)s %(t)s "%(r)s" %(s)s len=%(b)s time=%(L)s @ "%(Uq)s" "%(f)s" "%(a)s"'
+
+accesslog = "/var/log/hypercorn/access.log"
+errorlog = "/var/log/hypercorn/error.log"
+loglevel = "ERROR"
+
+keep_alive_timeout = "15s"
+quic_bind = "localhost:5000"
+user = "kiss-rest"
+# server_names = []
+
+worker_class = "asyncio"
+workers = 1
