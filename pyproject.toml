@@ -9,3 +9,7 @@ warn_unreachable = true
 
 pretty = true
 color_output = true
+
+[tool.autopep8]
+max_line_length = 100
+aggressive = 3
