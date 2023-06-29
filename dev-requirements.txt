@@ -1,0 +1,5 @@
+-r "runtime-requirements.txt"
+
+pytest == 7.0.*
+Faker  == 18.11.*
+mypy   == 1.4.*
