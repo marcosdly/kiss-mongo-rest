@@ -1,8 +1,16 @@
 from enum import Enum
-from fastapi import APIRouter
+from fastapi import FastAPI
+from src.db import CLIENT
+from src.routers.document import router
 
 class Routers(Enum):
     """Enumeration/Dataclass for all the routers."""
-    DOCUMENT = __import__(".document").router
+    DOCUMENT = router
 
-API = APIRouter(prefix="/api", routes=[r.value for r in Routers])
+app = FastAPI(root_path="/api")
+
+for r in Routers: app.include_router(r.value)
+
+@app.on_event("shutdown")
+def app_shutdown() -> None:
+    CLIENT.close()
