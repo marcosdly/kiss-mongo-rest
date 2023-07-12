@@ -11,9 +11,8 @@ from src.messages import ErrorResponse
 @dataclass(init=False, frozen=True)
 class APIDatabaseOperations:
     @classmethod
-    def connection_failed(cls, uri: str, tries: int = 3) -> Optional[ConnectionFailure]:
+    def connection_failed(cls, client: MongoClient, tries: int = 3) -> Optional[ConnectionFailure]:
         """Tests the connection and returns an instance an exception if failed."""
-        client: MongoClient = MongoClient(uri)
         while True:
             try:
                 client.admin.command("ping")
@@ -24,8 +23,13 @@ class APIDatabaseOperations:
                         f"Test connections failed. Attempted {tries} times. Check your database credentials.")
             else:
                 return None
-            finally:
-                client.close()
+
+    @classmethod
+    def test_connection(cls, client: MongoClient) -> Optional[ErrorResponse]:
+        if err := cls.connection_failed(client):
+            logging.error(str(err))
+            return ErrorResponse(503, str(err))
+        return None
 
     @classmethod
     def get_collection(cls, client: MongoClient, db: str,
@@ -48,7 +52,7 @@ class APIDatabaseOperations:
             return ErrorResponse(404, f"Collection '{col}' doesn't exist.")
 
 
-def client() -> Union[MongoClient, ErrorResponse]:
+def _client() -> MongoClient:
     # Trying so hard to turn the URI string into a mini-namespace for organization
     # purposes. Now everything in this module is either a regular class
     # or a glorified namespace.
@@ -95,8 +99,7 @@ def client() -> Union[MongoClient, ErrorResponse]:
 
     uri: str = get_connection_uri()
 
-    if err := APIDatabaseOperations.connection_failed(uri):
-        logging.error(str(err))
-        return ErrorResponse(503, str(err))
-
     return MongoClient(uri)
+
+
+CLIENT: MongoClient = _client()
