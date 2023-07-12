@@ -13,3 +13,18 @@ color_output = true
 [tool.autopep8]
 max_line_length = 100
 aggressive = 3
+
+[tool.pytest.ini_options]
+addopts = [
+  "--strict-config"
+]
+required_plugins = [
+  "pytest-pythonpath",
+  "pytest-order"
+]
+testpaths = [
+  "test"
+]
+python_paths = [
+  "src"
+]

@@ -2,5 +2,8 @@
 
 autopep8
 pytest == 7.0.*
+pytest-pythonpath == 0.7.*
+pytest-order == 1.1.*
+httpx  == 0.24.*
 Faker  == 18.11.*
 mypy   == 1.4.*
